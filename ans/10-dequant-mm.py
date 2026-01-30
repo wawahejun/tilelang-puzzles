@@ -22,31 +22,33 @@ Because INT4 is less than a byte, we usually packed two INT4 in a storage type, 
 10-1: Dequantized Matrix Multiplication.
 
 Inputs:
-    A: [M, K]  # input tensor
-    B: [K, N]  # input tensor
+    A: Tensor([M, K], float16)  # input tensor
+    B: Tensor([K, N // 2], uint8)  # input tensor (packed int4)
     N: int   # size of the tensor. 1 <= N <= 8192
     M: int   # size of the tensor. 1 <= M <= 8192
-    M: int   # size of the tensor. 1 <= M <= 8192
-    A_dtype: torch.dtype  # data type of the A/C tensor, high precison.
-    B_storage_dtype: torch.dtype  # storage type of the B tensor, low precison.
+    K: int   # size of the tensor. 1 <= K <= 8192
 
 Output:
-    C: [M, N]  # output tensor
+    C: Tensor([M, N], float16)  # output tensor
 
 Intermediates:
-    B_high: [1, ] # high bits of B
-    B_low: [1,]   # low bits of B
+    ACC0: float32  # accumulator
+    ACC1: float32  # accumulator
+    B_high: float16  # high bits of B
+    B_low: float16   # low bits of B
 
 Definition:
     for i in range(M):
         for j in range(N // 2):
-            C[i, j * 2] = 0
-            C[i, j * 2 + 1] = 0
+            ACC0 = 0
+            ACC1 = 0
             for k in range(K):
-                B_low = A_dtype(B[k, j] & 0x0F) - 8.0  # signed int4
-                B_high = A_dtype((B[k, j] >> 4) & 0x0F) - 8.0  # signed int4
-                C[i, j * 2] += A[i, k] * B_low
-                C[i, j * 2 + 1] += A[i, k] * B_high
+                B_low = float16(B[k, j] & 0x0F) - 8.0  # signed int4
+                B_high = float16((B[k, j] >> 4) & 0x0F) - 8.0  # signed int4
+                ACC0 += A[i, k] * B_low
+                ACC1 += A[i, k] * B_high
+            C[i, j * 2] = ACC0
+            C[i, j * 2 + 1] = ACC1
 """
 
 

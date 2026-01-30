@@ -39,17 +39,16 @@ FlashAttention algorithm. Through this, we can implement softmax with only two p
 06-1: Softmax.
 
 Inputs:
-    A: [N, M]  # input tensor
+    A: Tensor([N, M], float32)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 4096
     M: int   # size of the tensor. 1 <= M <= 16384
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    B: [N, M]  # output tensor
+    B: Tensor([N, M], float16)  # output tensor
 
 Intermediates:
-    MAX: dtype  # max value of each row
-    SUM: dtype  # summation of each row
+    MAX: float32  # max value of each row
+    SUM: float32  # summation of each row
 
 Definition:
     for i in range(N):

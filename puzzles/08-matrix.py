@@ -25,20 +25,23 @@ float32.
 08-1: Matrix-Vector Multiplication.
 
 Inputs:
-    A: [M, K]  # input matrix
-    B: [K,]  # input vector
+    A: Tensor([M, K], float16)  # input matrix
+    B: Tensor([K,], float16)  # input vector
     N: int   # size of the tensor. 1 <= N <= 8192
     K: int   # size of the tensor. 1 <= K <= 8192
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    C: [M,]  # output tensor
+    C: Tensor([M,], float16)  # output tensor
+
+Intermediates:
+    ACC: float32  # accumulator
 
 Definition:
     for i in range(M):
-        C[i] = 0
+        ACC = 0
         for k in range(K):
-            C[i] += A[i, k] * B[k]
+            ACC += A[i, k] * B[k]
+        C[i] = ACC
 """
 
 
@@ -119,12 +122,14 @@ The rest thing is just to tile the whole matrix.
 08-2: Matmul (Matrix-Matrix Multiplication)
 
 Inputs:
-    A: [M, K]  # input tensor
-    B: [K, N]  # input tensor
+    A: Tensor([M, K], float16)  # input tensor
+    B: Tensor([K, N], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 8192
     M: int   # size of the tensor. 1 <= M <= 8192
-    M: int   # size of the tensor. 1 <= M <= 8192
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
+    K: int   # size of the tensor. 1 <= K <= 8192
+
+Intermediates:
+    ACC: float32  # accumulator
 
 Output:
     C: [M, N]  # output tensor
@@ -132,9 +137,10 @@ Output:
 Definition:
     for i in range(M):
         for j in range(N):
-            C[i, j] = 0
+            ACC = 0
             for k in range(K):
-                C[i, j] += A[i, k] * B[k, j]
+                ACC += A[i, k] * B[k, j]
+            C[i, j] = ACC
 """
 
 

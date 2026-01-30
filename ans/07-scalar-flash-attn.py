@@ -26,21 +26,20 @@ TileLang, we can easily extend it to the full FlashAttention.
 06-1: Simplified Scalar Flash Attention.
 
 Inputs:
-    Q: [B, S]  # input tensor
-    K: [B, S]  # input tensor
-    V: [B, S]  # input tensor
+    Q: Tensor([B, S], float32)  # input tensor
+    K: Tensor([B, S], float32)  # input tensor
+    V: Tensor([B, S], float32)  # input tensor
     B: int   # batch size dimension. 1 <= B <= 256
     S: int   # sequence length dimension. 1 <= S <= 16384
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    O: [B, S]  # output tensor
+    O: Tensor([B, S], float32)  # output tensor
 
 Intermediates:
-    MAX: dtype  # max value of each row
-    SUM: dtype  # summation of each row
-    QK: [B, S]  # results of q*k
-    P:  [B, S]  # results of softmax(q*k) (not divided by summation).
+    MAX: float32  # max value of each row
+    SUM: float32  # summation of each row
+    QK: Tensor([B, S], float32)  # results of q*k
+    P:  Tensor([B, S], float32)  # results of softmax(q*k) (not divided by summation).
 
 Definition:
     for i in range(B):

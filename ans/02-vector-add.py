@@ -22,13 +22,12 @@ Inside the loop body, we can perform whatever computation we want.
 02-1: 1-D vector addition.
 
 Inputs:
-    A: [N,]  # input tensor
-    B: [N,]  # input tensor
+    A: Tensor([N,], float16)  # input tensor
+    B: Tensor([N,], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 1024*1024
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    C: [N,]  # output tensor
+    C: Tensor([N,], T.float16)  # output tensor
 
 Definition:
     for i in range(N):
@@ -75,13 +74,12 @@ HINT: We can use T.if_then_else(cond, true_value, false_value) to implement cond
 02-2: 1-D vector multiplication with ReLU activation
 
 Inputs:
-    A: [N,]  # input tensor
-    B: [N,]  # input tensor
+    A: Tensor([N,], float16)  # input tensor
+    B: Tensor([N,], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 1024*1024
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    C: [N,]  # output tensor
+    C: Tensor([N,], T.float16)  # output tensor
 
 Definition:
     for i in range(N):

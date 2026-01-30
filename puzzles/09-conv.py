@@ -26,23 +26,26 @@ this chapter.
 08-1: 1D Convolution.
 
 Inputs:
-    X: [N, L]  # input tensor
-    K: [KL,]  # kernel tensor
+    X: Tensor([N, L], float16)  # input tensor
+    K: Tensor([KL,], float16)  # kernel tensor
     N: int   # batch size dimension. 1 <= N <= 64
     H: int   # length dimension. 1 <= H <= 1024
     KL: int  # kernel height. 1 <= KH <= 32
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    O: [N, L]  # output tensor
+    O: Tensor([N, L], float16)  # output tensor
+
+Intermediates:
+    ACC: float32  # accumulator
 
 Definition:
     for i in range(N):
         for j in range(L):
-            O[i, j] = 0
+            ACC = 0
             for k in range(KL):
                 if j + k < L:  # boundary check
-                    O[i, j] += X[i, j + k] * K[k]
+                    ACC += X[i, j + k] * K[k]
+            O[i, j] = ACC
 """
 
 
@@ -124,25 +127,28 @@ To present GEMM from degenerating to GEMV, we need to introduce an output channe
 08-2: 1D Convolution with multiple output channels.
 
 Inputs:
-    X: [N, L]  # input tensor
-    K: [KL, F]  # kernel tensor
+    X: Tensor([N, L], float16)  # input tensor
+    K: Tensor([KL, F], float16)  # kernel tensor
     N: int   # batch size dimension. 1 <= N <= 64
     H: int   # length dimension. 1 <= H <= 1024
     KL: int  # kernel height. 1 <= KH <= 32
     F: int   # filter channels. 32 <= F <= 128
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    O: [N, L, F]  # output tensor
+    O: Tensor([N, L, F], float16)  # output tensor
+
+Intermediates:
+    ACC: float32  # accumulator
 
 Definition:
     for i in range(N):
         for j in range(L):
             for f in range(F):
-                O[i, j, f] = 0
+                ACC = 0
                 for k in range(KL):
                     if j + k < L:  # boundary check
-                        O[i, j, f] += X[i, j + k] * K[k, f]
+                        ACC += X[i, j + k] * K[k, f]
+                O[i, j, f] = ACC
 """
 
 

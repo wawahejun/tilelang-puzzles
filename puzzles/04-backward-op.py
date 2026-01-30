@@ -21,14 +21,13 @@ We now extend the first input A to be a 2D tensor (Then B is like "broadcast" to
 04-1: Fused multiplication ReLU with broadcasting.
 
 Inputs:
-    A: [N, M]  # input tensor
-    B: [M,]  # input tensor
+    A: Tensor([N, M], float16)  # input tensor
+    B: Tensor([M,], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 8192
     M: int   # size of the tensor. 1 <= M <= 8192
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    C: [N, M]  # output tensor
+    C: Tensor([N, M], float16)  # output tensor
 
 Definition:
     for i in range(N):
@@ -82,15 +81,14 @@ formalized as:
 04-2: Backward of fused multiplication ReLU with broadcasting.
 
 Inputs:
-    A: [N, M]  # input tensor
-    B: [M,]  # input tensor
-    dC: [N, M]  # derivative w.r.t. C
+    A: Tensor([N, M], float16)  # input tensor
+    B: Tensor([M,], float16)  # input tensor
+    dC: Tensor([N, M], float16)  # derivative w.r.t. C
     N: int   # size of the tensor. 1 <= N <= 8192
     M: int   # size of the tensor. 1 <= M <= 8192
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    dA: [N, M]  # derivative w.r.t. A
+    dA: Tensor([N, M], float16)  # derivative w.r.t. A
 
 Definition:
     for i in range(N):

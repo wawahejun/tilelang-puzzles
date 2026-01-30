@@ -29,14 +29,13 @@ in the fragment buffers instead of global memory.
 05-1: Reduce sum.
 
 Inputs:
-    A: [N, M]  # input tensor
-    B: [M,]  # input tensor
+    A: Tensor([N, M], float32)  # input tensor
+    B: Tensor([M,], float32)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 4096
     M: int   # size of the tensor. 1 <= M <= 16384
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    B: [N,]  # output tensor
+    B: Tensor([N,], float32)  # output tensor
 
 Definition:
     for i in range(N):

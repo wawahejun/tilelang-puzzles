@@ -19,15 +19,18 @@ To begin with, we start to provide a runnable example of TileLang's copy.
 The code below shows how to define a 1-D copy kernel using TileLang. We assume
 all tensors are stored in the global memory (DRAM) of GPU initially.
 
-Example 01-1: 1-D copy kernel.
+01-1: 1-D copy kernel.
 
 Inputs:
-    A: [N,]  # input tensor
+    A: Tensor([N,], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 1024*1024
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
-    B: [N,]  # copied tensor
+    B: Tensor([N,], float16)  # copied tensor
+
+Definition:
+    for i in range(N):
+        B[i] = A[i]
 """
 
 
@@ -112,6 +115,7 @@ def run_copy_1d_multi_threads():
 
     test_puzzle(tl_copy_1d_multi_threads, ref_copy_1d, {"N": N})
 
+    # This may take a while since N is large
     bench_puzzle(
         tl_copy_1d_serial,
         ref_copy_1d,

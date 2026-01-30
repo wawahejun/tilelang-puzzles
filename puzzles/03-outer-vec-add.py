@@ -27,11 +27,10 @@ So we just need to handle the indexing properly.
 03-1: Outer vector addition.
 
 Inputs:
-    A: [N,]  # input tensor
-    B: [M,]  # input tensor
+    A: Tensor([N,], float16)  # input tensor
+    B: Tensor([M,], float16)  # input tensor
     N: int   # size of the tensor. 1 <= N <= 8192
     M: int   # size of the tensor. 1 <= M <= 8192
-    dtype: torch.dtype  # data type of the tensor. e.g., torch.float32, torch.int32, etc.
 
 Output:
     C: [N, M]  # output tensor
